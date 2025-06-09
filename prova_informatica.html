@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prova de Informática</title>
+  <style>
+    /* ===== Animações ===== */
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 10px #00ffcc;
+      }
+      50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px #00ffcc;
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes glow {
+      0%, 100% {
+        box-shadow: 0 0 8px #00ffcc;
+      }
+      50% {
+        box-shadow: 0 0 20px #00ffcc;
+      }
+    }
+
+    /* ===== Estilos Gerais ===== */
+    body {
+      background-color: #121212;
+      color: #f0f0f0;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      position: relative;
+      animation: fadeInDown 1s ease forwards;
+    }
+
+    h1 {
+      color: #00ffcc;
+      animation: pulse 2.5s infinite ease-in-out;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .pergunta {
+      margin-bottom: 30px;
+      border-bottom: 1px solid #333;
+      padding-bottom: 20px;
+      opacity: 0;
+      animation: slideUp 0.6s forwards;
+      animation-delay: 0.3s;
+    }
+    /* Delay para cada pergunta animar em sequência */
+    .pergunta:nth-child(odd) {
+      animation-delay: 0.3s;
+    }
+    .pergunta:nth-child(even) {
+      animation-delay: 0.5s;
+    }
+
+    .pergunta label {
+      display: block;
+      margin: 10px 0;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      user-select: none;
+    }
+    .pergunta label:hover {
+      background-color: #008b74;
+      transform: scale(1.05);
+    }
+    .pergunta label.selected {
+      background-color: #28a745; /* verde */
+      color: #fff;
+      font-weight: bold;
+      animation: glow 1.5s infinite ease-in-out;
+    }
+
+    .pontuacao {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #00ffcc;
+      color: #121212;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-weight: bold;
+      animation: pulse 3s infinite ease-in-out;
+      box-shadow: 0 0 10px #00ffcc;
+      user-select: none;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #00ffcc;
+      color: #121212;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 20px;
+      user-select: none;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      animation: fadeInDown 1s ease forwards;
+    }
+    button:hover {
+      background-color: #00ccb3;
+      transform: scale(1.1);
+    }
+
+    /* Tela de resultado */
+    #telaResultado {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background-color: #222;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #00ffcc;
+      width: 90%;
+      max-width: 400px;
+      color: #00ffcc;
+      text-align: center;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    #telaResultado.show {
+      display: block;
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+      animation: pulse 2s infinite ease-in-out;
+    }
+    #telaResultado h2 {
+      margin-bottom: 20px;
+    }
+    #telaResultado button {
+      background-color: #00ffcc;
+      color: #121212;
+      margin-top: 20px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    #telaResultado button:hover {
+      background-color: #00ccb3;
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+  <h1>Prova de Informática Básica</h1>
+
+  <form id="quizForm">
+    <!-- Exemplo com 5 perguntas, você pode completar até a 32 -->
+    <div class="pergunta" data-pergunta="1">
+      <p>1. O que é um computador?</p>
+      <label><input type="radio" name="q1" value="0" /> a) Um eletrodoméstico para fazer comida</label>
+      <label><input type="radio" name="q1" value="0" /> b) Uma máquina de calcular apenas</label>
+      <label><input type="radio" name="q1" value="1" /> c) Um aparelho usado para acessar informações e realizar tarefas</label>
+      <label><input type="radio" name="q1" value="0" /> d) Um telefone antigo</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="2">
+      <p>2. Qual dessas peças faz parte do computador?</p>
+      <label><input type="radio" name="q2" value="0" /> a) Fogão</label>
+      <label><input type="radio" name="q2" value="0" /> b) Geladeira</label>
+      <label><input type="radio" name="q2" value="1" /> c) Teclado</label>
+      <label><input type="radio" name="q2" value="0" /> d) Vassoura</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="3">
+      <p>3. Para ligar o computador, é necessário:</p>
+      <label><input type="radio" name="q3" value="0" /> a) Abrir a porta</label>
+      <label><input type="radio" name="q3" value="1" /> b) Apertar o botão de energia</label>
+      <label><input type="radio" name="q3" value="0" /> c) Jogar água</label>
+      <label><input type="radio" name="q3" value="0" /> d) Bater na tela</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="4">
+      <p>4. O mouse serve para:</p>
+      <label><input type="radio" name="q4" value="0" /> a) Escrever textos</label>
+      <label><input type="radio" name="q4" value="0" /> b) Apagar arquivos</label>
+      <label><input type="radio" name="q4" value="1" /> c) Controlar o ponteiro na tela</label>
+      <label><input type="radio" name="q4" value="0" /> d) Aumentar o som</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="5">
+      <p>5. O monitor é:</p>
+      <label><input type="radio" name="q5" value="0" /> a) A parte que guarda os arquivos</label>
+      <label><input type="radio" name="q5" value="0" /> b) A parte que imprime</label>
+      <label><input type="radio" name="q5" value="1" /> c) A tela onde vemos as informações</label>
+      <label><input type="radio" name="q5" value="0" /> d) O cabo de energia</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="6">
+      <p>6. Oque é um computador?:</p>
+      <label><input type="radio" name="q6" value="1" /> a) Um computador é uma máquina eletrônica capaz de receber, processar e armazenar dados.</label>
+      <label><input type="radio" name="q6" value="0" /> b) Um computador é apenas um tipo de televisão com acesso à internet</label>
+      <label><input type="radio" name="q6" value="0" /> c) Computador é um aparelho feito exclusivamente para jogos</label>
+      <label><input type="radio" name="q6" value="0" /> d) Computador é uma impressora moderna que acessa a internet</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="7">
+      <p>7. O que é um pendrive?:</p>
+      <label><input type="radio" name="q7" value="0" /> a) Um botão</label>
+      <label><input type="radio" name="q7" value="0" /> b) Um tipo de comida</label>
+      <label><input type="radio" name="q7" value="1" /> c) Um aparelho para guardar e transportar arquivos</label>
+      <label><input type="radio" name="q7" value="0" /> d) Um controle remoto</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="8">
+      <p>8. O que é um teclado?:</p>
+      <label><input type="radio" name="q8" value="0" /> a) Um programa de TV</label>
+      <label><input type="radio" name="q8" value="0" /> b) Um tipo de celular</label>
+      <label><input type="radio" name="q8" value="1" /> c) Um conjunto de letras e números usado para digitar</label>
+      <label><input type="radio" name="q8" value="0" /> d) Um alto-falante</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="9">
+      <p>9. Para desligar o computador corretamente, devemos:</p>
+      <label><input type="radio" name="q9" value="0" /> a) Tirar da tomada direto</label>
+      <label><input type="radio" name="q9" value="0" /> b) Fechar o monitor</label>
+      <label><input type="radio" name="q9" value="1" /> c) Usar a opção "Desligar" no menu</label>
+      <label><input type="radio" name="q9" value="0" /> d) Apertar todas as teclas ao mesmo tempo</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="10">
+      <p>10. O monitor é:</p>
+      <label><input type="radio" name="q10" value="0" /> a) Um tipo de televisão</label>
+      <label><input type="radio" name="q10" value="0" /> b) Um programa de edição</label>
+      <label><input type="radio" name="q10" value="1" /> c) Uma rede que conecta computadores no mundo todo</label>
+      <label><input type="radio" name="q10" value="0" /> d) Uma fonte de energia</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="11">
+      <p>11. Para acessar um site, usamos:</p>
+      <label><input type="radio" name="q11" value="0" /> a) Um liquidificador</label>
+      <label><input type="radio" name="q11" value="1" /> b) Um navegador (como Google Chrome ou Firefox)</label>
+      <label><input type="radio" name="q11" value="0" /> c) Um controle de TV</label>
+      <label><input type="radio" name="q11" value="0" /> d) Um bloco de papel</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="12">
+      <p>12. O Google é:</p>
+      <label><input type="radio" name="q12" value="0" /> a) Um jogo de cartas</label>
+      <label><input type="radio" name="q12" value="1" /> b) Um site de pesquisas</label>
+      <label><input type="radio" name="q12" value="0" /> c) Um antivírus</label>
+      <label><input type="radio" name="q12" value="0" /> d) Uma marca de carro</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="13">
+      <p>13. Para fazer uma pesquisa, devemos:</p>
+      <label><input type="radio" name="q13" value="0" /> a) Ir ao supermercado</label>
+      <label><input type="radio" name="q13" value="1" /> b) Abrir o navegador e digitar o que queremos saber</label>
+      <label><input type="radio" name="q13" value="0" /> c) Assistir à novela</label>
+      <label><input type="radio" name="q13" value="0" /> d) Trocar o teclado</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="14">
+      <p>14. O que é Wi-Fi?:</p>
+      <label><input type="radio" name="q14" value="0" /> a) Um tipo de bebida</label>
+      <label><input type="radio" name="q14" value="0" /> b) Um botão do computador</label>
+      <label><input type="radio" name="q14" value="1" /> c) Uma forma de conectar à internet sem fio</label>
+      <label><input type="radio" name="q14" value="0" /> d) Um cabo de vídeo</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="15">
+      <p>15. Ao clicar em um link, o que acontece?:</p>
+      <label><input type="radio" name="q15" value="0" /> a) Aumenta o volume</label>
+      <label><input type="radio" name="q15" value="0" /> b) Apaga o computador</label>
+      <label><input type="radio" name="q15" value="1" /> c) Abre uma nova página ou site</label>
+      <label><input type="radio" name="q15" value="0" /> d) Tira uma foto</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="16">
+      <p>16. Qual desses navegadores é mais conhecido?:</p>
+      <label><input type="radio" name="q16" value="0" /> a) Microsoft Word</label>
+      <label><input type="radio" name="q16" value="0" /> b) Paint</label>
+      <label><input type="radio" name="q16" value="1" /> c) Google Chrome</label>
+      <label><input type="radio" name="q16" value="0" /> d) PowerPoint</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="17">
+      <p>17. O que é um e-mail?:</p>
+      <label><input type="radio" name="q17" value="0" /> a) Uma comida típica</label>
+      <label><input type="radio" name="q17" value="0" /> b) Um documento impresso</label>
+      <label><input type="radio" name="q17" value="1" /> c) Uma mensagem eletrônica enviada pela internet</label>
+      <label><input type="radio" name="q17" value="0" /> d) Um cartão postal</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="18">
+      <p>18. Para enviar um e-mail, é necessário:</p>
+      <label><input type="radio" name="q18" value="1" /> a) Ter uma conta de e-mail</label>
+      <label><input type="radio" name="q18" value="0" /> b) Ir até os Correios</label>
+      <label><input type="radio" name="q18" value="0" /> c) Escrever no papel</label>
+      <label><input type="radio" name="q18" value="0" /> d) Ligar a televisão</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="19">
+      <p>19. O campo "Assunto" do e-mail serve para:</p>
+      <label><input type="radio" name="q19" value="0" /> a) Colocar um vídeo</label>
+      <label><input type="radio" name="q19" value="0" /> b) Digitar o nome da pessoa</label>
+      <label><input type="radio" name="q19" value="1" /> c) Escrever o tema principal da mensagem</label>
+      <label><input type="radio" name="q19" value="0" /> d) Enviar uma foto</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="20">
+      <p>20. As redes sociais como Facebook e WhatsApp servem para:</p>
+      <label><input type="radio" name="q20" value="0" /> a) Jogar futebol</label>
+      <label><input type="radio" name="q20" value="1" /> b) Fazer chamadas e se comunicar com outras pessoas</label>
+      <label><input type="radio" name="q20" value="0" /> c) Cozinhar</label>
+      <label><input type="radio" name="q20" value="0" /> d) Imprimir documentos</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="21">
+      <p>21. No WhatsApp, é possível:</p>
+      <label><input type="radio" name="q21" value="0" /> a) Assistir TV</label>
+      <label><input type="radio" name="q21" value="1" /> b) Mandar mensagens, fotos e vídeos</label>
+      <label><input type="radio" name="q21" value="0" /> c) Pintar desenhos</label>
+      <label><input type="radio" name="q21" value="0" /> d) Escrever livros</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="22">
+      <p>22. O que é um vírus de computador?:</p>
+      <label><input type="radio" name="q22" value="0" /> a) Um problema de saúde</label>
+      <label><input type="radio" name="q22" value="0" /> b) Um animal virtual</label>
+      <label><input type="radio" name="q22" value="1" /> c) Um programa malicioso que pode danificar arquivos</label>
+      <label><input type="radio" name="q22" value="0" /> d) Um site de receitas</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="23">
+      <p>23. Como evitar vírus no computador?:</p>
+      <label><input type="radio" name="q232" value="0" /> a) Entrar em todos os sites</label>
+      <label><input type="radio" name="q23" value="1" /> b) Instalar um antivírus e evitar clicar em links suspeitos</label>
+      <label><input type="radio" name="q23" value="0" /> c) Usar muito o computador</label>
+      <label><input type="radio" name="q23" value="0" /> d) Usar o computador com fone de ouvido</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="24">
+      <p>24. Senhas seguras devem ter:</p>
+      <label><input type="radio" name="q24" value="0" /> a) Apenas seu nome</label>
+      <label><input type="radio" name="q24" value="1" /> b) Números e letras misturados</label>
+      <label><input type="radio" name="q24" value="0" /> c) O nome do cachorro</label>
+      <label><input type="radio" name="q24" value="0" /> d) Apenas a data de nascimento</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="25">
+      <p>25. Devemos compartilhar senhas com:</p>
+      <label><input type="radio" name="q25" value="0" /> a) Amigos</label>
+      <label><input type="radio" name="q25" value="0" /> b) Familiares</label>
+      <label><input type="radio" name="q25" value="0" /> c) Pessoas estranhas</label>
+      <label><input type="radio" name="q25" value="1" /> d) Ninguém</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="26">
+      <p>26. Um golpe virtual pode acontecer quando:</p>
+      <label><input type="radio" name="q26" value="1" /> a) Você recebe mensagens de desconhecidos pedindo dinheiro</label>
+      <label><input type="radio" name="q26" value="0" /> b) Você limpa a tela do computador</label>
+      <label><input type="radio" name="q26" value="0" /> c) Você instala programas oficiais</label>
+      <label><input type="radio" name="q26" value="0" /> d) Você assiste vídeos no YouTube</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="27">
+      <p>27. O que é o Microsoft Word?:</p>
+      <label><input type="radio" name="q27" value="0" /> a) Um programa para ouvir músicas</label>
+      <label><input type="radio" name="q27" value="0" /> b) Um site de redes sociais</label>
+      <label><input type="radio" name="q27" value="0" /> c) Um editor de textos</label>
+      <label><input type="radio" name="q27" value="1" /> d) Um navegador de internet</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="28">
+      <p>28. Para salvar um arquivo, usamos:</p>
+      <label><input type="radio" name="q28" value="0" /> a) A tecla “Apagar”</label>
+      <label><input type="radio" name="q28" value="1" /> b) O botão “Salvar” ou “Salvar como”</label>
+      <label><input type="radio" name="q28" value="0" /> c) O botão do volume</label>
+      <label><input type="radio" name="q28" value="0" /> d) O mouse direito</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="29">
+      <p>29. Um arquivo PDF é:</p>
+      <label><input type="radio" name="q29" value="0" /> a) Um vídeo</label>
+      <label><input type="radio" name="q29" value="1" /> b) Um tipo de documento</label>
+      <label><input type="radio" name="q29" value="0" /> c) Uma imagem animada</label>
+      <label><input type="radio" name="q29" value="0" /> d) Um áudio</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="30">
+      <p>30. A lixeira do computador serve para:</p>
+      <label><input type="radio" name="q30" value="1" /> a) Jogar fora arquivos desnecessários</label>
+      <label><input type="radio" name="q30" value="0" /> b) Salvar fotos</label>
+      <label><input type="radio" name="q30" value="0" /> c) Escrever textos</label>
+      <label><input type="radio" name="q30" value="0" /> d) Aumentar o brilho da tela</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="31">
+      <p>31. O programa Paint é usado para:</p>
+      <label><input type="radio" name="q31" value="0" /> a) Escrever textos</label>
+      <label><input type="radio" name="q31" value="0" /> b) Fazer cálculos</label>
+      <label><input type="radio" name="q31" value="1" /> c) Desenhar e pintar</label>
+      <label><input type="radio" name="q31" value="0" /> d) Mandar e-mails</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="32">
+      <p>32. Para abrir uma pasta de arquivos, devemos:</p>
+      <label><input type="radio" name="q32" value="0" /> a) Ligar o computador</label>
+      <label><input type="radio" name="q32" value="1" /> b) Clicar duas vezes na pasta com o mouse</label>
+      <label><input type="radio" name="q32" value="0" /> c) Escrever no teclado</label>
+      <label><input type="radio" name="q32" value="0" /> d) Abrir o word</label>
+    </div>
+
+    <div class="pergunta" data-pergunta="33">
+      <p>33. Ao terminar de usar o computador, é importante:</p>
+      <label><input type="radio" name="q33" value="1" /> a) Desligar pela opção correta</label>
+      <label><input type="radio" name="q33" value="0" /> b) Deixar ligado sempre</label>
+      <label><input type="radio" name="q33" value="0" /> c) Tirar a tela da tomada</label>
+      <label><input type="radio" name="q33" value="0" /> d) Apagar todos os arquivos</label>
+    </div>
+
+    <button type="button" id="finalizarBtn">Finalizar Prova</button>
+  </form>
+
+  <div class="pontuacao" id="resultado">Pontuação: 0%</div>
+
+  <div id="telaResultado">
+    <h2>Resultado da Prova</h2>
+    <p id="pontuacaoFinal"></p>
+    <p id="tempoFinal"></p>
+    <button onclick="reiniciarProva()">Refazer Prova</button>
+  </div>
+
+  <script>
+  let inicioTempo = Date.now();
+
+  const form = document.getElementById("quizForm");
+  const resultado = document.getElementById("resultado");
+  const finalizarBtn = document.getElementById("finalizarBtn");
+  const telaResultado = document.getElementById("telaResultado");
+  const pontuacaoFinal = document.getElementById("pontuacaoFinal");
+  const tempoFinal = document.getElementById("tempoFinal");
+
+  // Atualiza pontuação e marca verde no label clicado
+  form.addEventListener("change", (e) => {
+    if (e.target.matches('input[type="radio"]')) {
+      const perguntaDiv = e.target.closest('.pergunta');
+      const labels = perguntaDiv.querySelectorAll('label');
+
+      labels.forEach(label => label.classList.remove('selected'));
+      const labelSelecionado = e.target.parentElement;
+      labelSelecionado.classList.add('selected');
+
+      // Comentado para esconder pontuação enquanto a prova não for finalizada
+      // atualizarPontuacao();
+    }
+  });
+
+  finalizarBtn.addEventListener('click', () => {
+    const totalPerguntas = document.querySelectorAll('.pergunta').length;
+    const respostas = form.querySelectorAll("input[type=radio]:checked").length;
+
+    if (respostas < totalPerguntas) {
+      alert("Por favor, responda todas as perguntas antes de finalizar.");
+      return;
+    }
+
+    const agora = Date.now();
+    const tempoGastoMs = agora - inicioTempo;
+    const segundos = Math.floor((tempoGastoMs / 1000) % 60);
+    const minutos = Math.floor((tempoGastoMs / 1000 / 60) % 60);
+    const horas = Math.floor(tempoGastoMs / 1000 / 60 / 60);
+
+    const tempoFormatado = 
+      (horas > 0 ? horas + "h " : "") +
+      (minutos > 0 ? minutos + "m " : "") +
+      segundos + "s";
+
+    // Calcula pontuação final
+    let pontos = 0;
+    form.querySelectorAll("input[type=radio]:checked").forEach(input => {
+      pontos += parseInt(input.value);
+    });
+    const porcentagem = (pontos / totalPerguntas) * 100;
+
+    // Mostrar tela resultado com classe CSS animada
+    pontuacaoFinal.innerText = `Pontuação final: ${porcentagem.toFixed(0)}%`;
+    tempoFinal.innerText = `Tempo gasto: ${tempoFormatado}`;
+    telaResultado.classList.add("show");
+
+    // Esconder form e pontuação flutuante
+    form.style.display = "none";
+    resultado.style.display = "none";
+    finalizarBtn.style.display = "none";
+  });
+
+  function reiniciarProva() {
+    telaResultado.classList.remove("show");
+
+    form.style.display = "block";
+    resultado.style.display = "block";
+    finalizarBtn.style.display = "inline-block";
+
+    form.reset();
+    resultado.innerText = "Pontuação: 0%";
+
+    const labels = form.querySelectorAll('label.selected');
+    labels.forEach(label => label.classList.remove('selected'));
+
+    inicioTempo = Date.now();
+  }
+</script>
+</body>
+</html>
